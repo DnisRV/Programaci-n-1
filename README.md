@@ -1,2 +1,123 @@
 # Programaci-n-1
 Proyecto Juego
+package juego.same;
+
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Random;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+public class JuegoSame extends JFrame {
+
+    JFrame ventana;
+    JLabel iconsMAT[][];//logicMAT visible//
+    int logicMAT[][];
+    Random aleatorio;
+
+    public JuegoSame() {
+        super("JuegoSAme");
+        setLocationRelativeTo(null); //Center the JFrame in the screen
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new Dimension(400, 700));
+        setLayout(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        iconsMAT = new JLabel[10][10];//tamaño de logicMAT//
+        logicMAT = new int[10][10];//logicMAT de enteros//
+        aleatorio = new Random();
+
+        for (int i = 0; i < iconsMAT.length; i++) {
+            for (int j = 0; j < iconsMAT.length; j++) {
+                iconsMAT[i][j] = new JLabel(); //espacio de memoria/
+                iconsMAT[i][j].setLocation(0 + i * 80, 0 + j * 80);
+                logicMAT[i][j] = aleatorio.nextInt(3) + 1;
+                //iconsMAT[i][j].setIcon(new ImageIcon("imagenes/" + logicMAT[i][j] + ".jpg"));//introduce las imagenes//
+                iconsMAT[i][j].setText("color:" + logicMAT[i][j]);
+                iconsMAT[i][j].setSize(iconsMAT[i][j].getMinimumSize());
+                iconsMAT[i][j].setVisible(true);
+                add(iconsMAT[i][j]);
+            }
+
+        }
+
+        for (int i = 0; i < iconsMAT.length; i++) { //
+            for (int j = 0; j < iconsMAT.length; j++) {
+
+                iconsMAT[i][j].addMouseListener(new MouseAdapter() { //funcion del mouse//
+                    @Override
+                    public void mouseClicked(MouseEvent ev) {
+                        for (int k = 0; k < iconsMAT.length; k++) {
+                            for (int l = 0; l < iconsMAT.length; l++) {//posicion en la logicMAT//
+                                if (iconsMAT[k][l] == ev.getSource()) {
+                                    int thisColor = logicMAT[k][l];
+                                    if(thisColor != -1){
+                                     validateColor(k, l, thisColor);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    public void validateColor(int k, int l, int thisColor) {
+
+        if (k != 0) {
+            if (logicMAT[k - 1][l] == thisColor) {
+                logicMAT[k - 1][l] = -1;
+                logicMAT[k][l] = -1;
+
+                iconsMAT[k - 1][l].setText("X");
+                iconsMAT[k][l].setText("X");
+                
+                validateColor(k-1, l, thisColor);
+            }
+        }
+
+        if (k != 9) {
+            if (logicMAT[k + 1][l] == thisColor) {
+                logicMAT[k + 1][l] = -1;
+                logicMAT[k][l] = -1;
+
+                iconsMAT[k + 1][l].setText("X");
+                iconsMAT[k][l].setText("X");
+                
+                validateColor(k+1, l,thisColor);
+            }
+        }
+
+        if (l != 0) {
+            if (logicMAT[k][l - 1] == thisColor) {
+                logicMAT[k][l - 1] = -1;
+                logicMAT[k][l] = -1;
+
+                iconsMAT[k][l - 1].setText("X");
+                iconsMAT[k][l].setText("X");
+                
+                validateColor(k, l-1, thisColor);
+            }
+        }
+
+        if (l != 9) {
+            if (logicMAT[k][l + 1] == thisColor) {
+                logicMAT[k][l + 1] = -1;
+                logicMAT[k][l] = -1;
+
+                iconsMAT[k][l + 1].setText("X");
+                iconsMAT[k][l].setText("X");
+                
+                validateColor(k, l+1,thisColor);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        // TODO code application logic here
+        new JuegoSame().setVisible(true);
+    }
+
+}
